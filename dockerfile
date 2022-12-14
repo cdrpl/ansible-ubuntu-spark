@@ -10,6 +10,8 @@ RUN apt-get update \
     && add-apt-repository --yes --update ppa:ansible/ansible \
     && apt-get install -y ansible
 
+COPY ./csv/* /root
+COPY ./sql/* /root
 COPY ./playbooks/* /root
 COPY ./ansible.cfg /etc/ansible/ansible.cfg
 COPY ./hosts /etc/ansible/hosts

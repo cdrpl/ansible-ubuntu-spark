@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS students(
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(32) NOT NULL,
+    age INT NOT NULL,
+    gpa FLOAT NOT NULL,
+    PRIMARY KEY (id)
+);

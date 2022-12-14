@@ -41,15 +41,20 @@ This repository provides ansible scripts to initialize ubuntu instances for Apac
 ### How to Update the Dependencies of your Instances (Windows OS Host)
 
 1. Start Docker
-2. Run `./apt-update.bat`
+2. Put your csv files in the [csv](./csv) folder
+3. Put your sql files in the [sql](./sql) folder
+4. Run `./apt-update.bat`
+5. You will be prompted to enter the sql and csv file names
 
-### Features
+View [students.csv](./csv/students.csv) and [create_students_table.sql](./sql/create_students_table.sql) for an example of creating the sql and csv files.
 
-1. Update dependencies on all instances
-2. Initialize a MySQL database instance
-3. Initialize a Apache Spark master instance
-4. Initialize any amount of Apache Spark worker nodes
-5. Import a CSV file into a MySQL table on the database instance
+### Ansible Playbooks
+
+1. Update dependencies on all instances - [apt-update](./playbooks/apt-update.yml)
+2. Import a CSV file into a MySQL table on the database instance - [import-csv-to-table](./playbooks/import-csv-to-table.yml)
+3. Initialize a MySQL database instance - [init-database](./playbooks/init-database.yml)
+4. Initialize a Apache Spark master instance - [init-master](./playbooks/init-master.yml)
+5. Initialize any amount of Apache Spark worker nodes - [init-nodes](./playbooks/init-nodes.yml)
 
 ### Ansible Config
 
