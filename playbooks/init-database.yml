@@ -1,0 +1,60 @@
+- name: Initialize Database Instance
+  hosts: database
+  user: ubuntu
+  become: yes
+
+  vars_prompt:
+    - name: database
+      prompt: Enter a name for your database
+      private: no
+
+    - name: username
+      prompt: Enter a username for the database
+      private: no
+
+    - name: password
+      prompt: Enter a password for the database
+      confirm: yes
+
+  tasks:
+    - name: Running apt update
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Installing required apt packages
+      apt:
+        name:
+          - mysql-server
+          - python-is-python3
+          - python3-pip
+        state: latest
+
+    - name: Pip install PyMySQL
+      pip:
+        name: PyMySQL
+
+    - name: Starting MySQL Server
+      systemd:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: "Creating a database named: {{ database }}"
+      community.mysql.mysql_db:
+        name:
+          - "{{ database }}"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: "Creating a user named: {{ username }}"
+      community.mysql.mysql_user:
+        name: "{{ username }}"
+        password: "{{ password }}"
+        priv: "*.*:ALL"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Rebooting the master instance
+      reboot:
