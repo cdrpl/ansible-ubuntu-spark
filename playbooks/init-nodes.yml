@@ -1,0 +1,58 @@
+- name: Initialize Apache Spark Nodes
+  hosts: nodes
+  user: ubuntu
+  become: yes
+
+  vars_prompt:
+    - name: spark_version
+      prompt: Enter the desired Apache Spark version
+      default: "3.3.1"
+      private: no
+
+  tasks:
+    - name: Running apt update
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Installing required apt packages
+      apt:
+        name:
+          - default-jre
+          - scala
+          - mysql-connector-j
+        state: latest
+
+    - name: Downloading compressed Apache Spark file
+      get_url:
+        url: https://dlcdn.apache.org/spark/spark-{{ spark_version }}/spark-{{ spark_version }}-bin-hadoop3.tgz
+        dest: /home/ubuntu/spark-{{ spark_version }}-bin-hadoop3.tgz
+
+    - name: Extracting compressed Apache Spark file
+      shell: tar xvf /home/ubuntu/spark-{{ spark_version }}-bin-hadoop3.tgz
+
+    - name: Deleting compressed Apache Spark file
+      file:
+        path: /home/ubuntu/spark-{{ spark_version }}-bin-hadoop3.tgz
+        state: absent
+
+    - name: Moving Apache Spark to /usr/local/spark
+      shell: mv /home/ubuntu/spark-{{ spark_version }}-bin-hadoop3 /usr/local/spark
+
+    - name: Changing ownership of /usr/local/spark
+      file:
+        path: /usr/local/spark
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Adding spark to path in /home/ubuntu/.profile
+      lineinfile:
+        path: /home/ubuntu/.profile
+        line: export PATH=/usr/local/spark/bin:$PATH
+
+    - name: Creating symbolic link for MySQL Connector J
+      shell: ln -sf /usr/share/java/mysql-connector* /usr/local/spark/jars
+
+    - name: Rebooting the nodes
+      reboot:

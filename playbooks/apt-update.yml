@@ -1,0 +1,11 @@
+- name: Run apt update & upgrade
+  hosts: all
+  user: ubuntu
+  become: yes
+
+  tasks:
+    - name: Running apt update & upgrade
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
