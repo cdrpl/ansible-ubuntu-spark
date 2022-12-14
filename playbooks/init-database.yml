@@ -35,10 +35,16 @@
       pip:
         name: PyMySQL
 
-    - name: Starting MySQL Server
+    - name: MySQL Server will bind on 0.0.0.0
+      lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: "^bind-address[ \t]*= 127.0.0.1"
+        line: bind-address = 0.0.0.0
+
+    - name: Restarting MySQL Server
       systemd:
         name: mysql
-        state: started
+        state: restarted
         enabled: true
 
     - name: "Creating a database named: {{ database }}"
@@ -54,7 +60,8 @@
         password: "{{ password }}"
         priv: "*.*:ALL"
         state: present
+        host: "%"
         login_unix_socket: /var/run/mysqld/mysqld.sock
 
-    - name: Rebooting the master instance
+    - name: Rebooting the database instance
       reboot:
