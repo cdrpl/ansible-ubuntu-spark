@@ -37,16 +37,18 @@ This repository provides ansible scripts to initialize ubuntu instances for Apac
 ### How to Import a CSV File into a MySQL Table (Windows OS Host)
 
 1. Start Docker
+2. Put your csv files in the [csv](./csv) folder
+3. Put your sql files in the [sql](./sql) folder
+4. Run `./import-csv-to-table.bat`
+5. You will be prompted to enter the sql and csv file names
+6. Next you will be prompted for the database and table names
+
+View [students.csv](./csv/students.csv) and [create_students_table.sql](./sql/create_students_table.sql) for an example of creating the sql and csv files.
 
 ### How to Update the Dependencies of your Instances (Windows OS Host)
 
 1. Start Docker
-2. Put your csv files in the [csv](./csv) folder
-3. Put your sql files in the [sql](./sql) folder
-4. Run `./apt-update.bat`
-5. You will be prompted to enter the sql and csv file names
-
-View [students.csv](./csv/students.csv) and [create_students_table.sql](./sql/create_students_table.sql) for an example of creating the sql and csv files.
+2. Run `./apt-update.bat`
 
 ### Ansible Playbooks
 
