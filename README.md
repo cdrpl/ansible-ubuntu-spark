@@ -32,6 +32,7 @@ This repository provides ansible scripts to initialize ubuntu instances for Apac
 
 1. Start Docker
 2. Run `./init-database.bat`
+3. You will be prompted to enter a username, password, and database name
 
 ### How to Import a CSV File into a MySQL Table (Windows OS Host)
 
