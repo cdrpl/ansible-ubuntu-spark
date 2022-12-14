@@ -71,3 +71,9 @@
         path: /usr/local/spark/conf/slaves
         line: "{{ item }}"
       loop: "{{ node_ips }}"
+
+    - name: Creating symbolic link for MySQL Connector J
+      shell: ln -sf /usr/share/java/mysql-connector* /usr/local/spark/jars
+
+    - name: Rebooting the master instance
+      reboot:
