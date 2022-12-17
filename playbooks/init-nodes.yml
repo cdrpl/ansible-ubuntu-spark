@@ -19,7 +19,7 @@
     - name: Installing required apt packages
       apt:
         name:
-          - default-jre
+          - openjdk-8-jdk
           - scala
           - mysql-connector-j
         state: latest

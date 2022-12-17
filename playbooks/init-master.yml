@@ -26,10 +26,41 @@
     - name: Installing required apt packages
       apt:
         name:
-          - default-jre
+          - openjdk-8-jdk
           - scala
           - mysql-connector-j
         state: latest
+
+    - name: Creating user named "git"
+      user:
+        name: git
+
+    - name: Creating /home/git/.ssh folder
+      file:
+        path: /home/git/.ssh
+        state: directory
+        owner: git
+        group: git
+        mode: 0700
+
+    - name: Copying /home/ubuntu/.ssh/authorized_keys to /home/git/.ssh/authorized_keys
+      copy:
+        src: /home/ubuntu/.ssh/authorized_keys
+        dest: /home/git/.ssh/authorized_keys
+        owner: git
+        group: git
+        mode: 0600
+        remote_src: true
+
+    - name: Creating bare spark git repo at /home/git/custom-spark
+      shell: git init --bare /home/git/custom-spark
+
+    - name: Change file ownership of /home/git/custom-spark
+      file:
+        path: /home/git/custom-spark
+        owner: git
+        group: git
+        mode: "0744"
 
     - name: Downloading compressed Apache Spark file
       get_url:
