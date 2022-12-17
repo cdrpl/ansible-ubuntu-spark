@@ -9,7 +9,7 @@ This repository provides ansible scripts to initialize ubuntu instances for Apac
 
 ### Setup Instructions (On Host OS)
 
-1. Clone the repository - `git clone git@github.com:cdrpl/ansible-ubuntu-spark.git`
+1. Clone the repository - `git clone https://github.com/cdrpl/ansible-ubuntu-spark.git`
 2. Copy your ssh key into the [ssh_keys](./ssh_keys) folder and name it id_rsa
 3. Copy the [example.ansible.cfg](./example.ansible.cfg) file - `cp example.ansible.cfg ansible.cfg`
 4. Copy the [example.hosts](./example.hosts) file - `cp example.hosts hosts`
