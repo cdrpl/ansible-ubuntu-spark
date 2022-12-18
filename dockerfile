@@ -18,4 +18,5 @@ COPY ./ansible.cfg /etc/ansible/ansible.cfg
 COPY ./hosts /etc/ansible/hosts
 COPY ./ssh_keys/id_rsa /root/.ssh/id_rsa
 
-RUN chmod 700 /root/.ssh/id_rsa
+RUN chmod 700 /root/.ssh
+RUN chmod 600 /root/.ssh/id_rsa
