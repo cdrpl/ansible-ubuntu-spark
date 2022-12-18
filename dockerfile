@@ -11,6 +11,7 @@ RUN apt-get update \
     && apt-get install -y ansible
 
 COPY ./csv/* /root
+COPY ./dependencies/* /root
 COPY ./sql/* /root
 COPY ./playbooks/* /root
 COPY ./ansible.cfg /etc/ansible/ansible.cfg

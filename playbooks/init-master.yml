@@ -28,8 +28,23 @@
         name:
           - openjdk-8-jdk
           - scala
-          - mysql-connector-j
         state: latest
+
+    - name: Copying mysql-connector-j
+      copy:
+        src: /root/mysql-connector-j_8.0.31-1ubuntu22.04_all.deb
+        dest: /home/ubuntu
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Installing mysql-connector-j
+      apt:
+        deb: /home/ubuntu/mysql-connector-j_8.0.31-1ubuntu22.04_all.deb
+
+    - name: Deleting mysql-connector-j_8.0.31-1ubuntu22.04_all.deb
+      file:
+        path: /home/ubuntu/mysql-connector-j_8.0.31-1ubuntu22.04_all.deb
+        state: absent
 
     - name: Creating user named "git"
       user:
