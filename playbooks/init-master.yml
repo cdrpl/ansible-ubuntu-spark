@@ -30,6 +30,14 @@
           - scala
         state: latest
 
+    - name: Copying id_rsa
+      copy:
+        src: /root/.ssh/id_rsa
+        dest: /home/ubuntu/.ssh
+        owner: ubuntu
+        group: ubuntu
+        mode: "0600"
+
     - name: Copying mysql-connector-j
       copy:
         src: /root/mysql-connector-j_8.0.31-1ubuntu22.04_all.deb
