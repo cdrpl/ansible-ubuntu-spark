@@ -1,0 +1,59 @@
+- name: Build spark from source on master
+  hosts: master
+  user: ubuntu
+  become: yes
+
+  vars_prompt:
+    - name: spark_directory
+      prompt: Enter the location for the custom Apache Spark
+      default: /home/ubuntu/spark
+      private: no
+
+    - name: spark_version
+      prompt: Enter the desired version of Apache Spark
+      default: "3.3.1"
+      private: no
+
+  tasks:
+    - name: Running apt update & upgrade
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Installing Java 8
+      apt:
+        name: openjdk-8-jdk
+        state: latest
+
+    - name: Cloning Apache Spark
+      git:
+        repo: https://github.com/apache/spark.git
+        dest: "{{ spark_directory }}"
+        clone: yes
+      become_user: ubuntu
+
+    - name: Adding JAVA_HOME to /home/ubuntu/.profile
+      lineinfile:
+        path: /home/ubuntu/.profile
+        line: export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+
+    - name: Adding MAVEN_OPTS to /home/ubuntu/.profile
+      lineinfile:
+        path: /home/ubuntu/.profile
+        line: export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g"
+
+    - name: Running git checkout v{{ spark_version }}
+      shell: git checkout v{{ spark_version }}
+      args:
+        chdir: "{{ spark_directory }}"
+      become_user: ubuntu
+
+    - name: Building Apache Spark
+      shell: ./dev/make-distribution.sh --name custom-spark --pip --tgz
+      args:
+        chdir: "{{ spark_directory }}"
+      become_user: ubuntu
+      environment:
+        JAVA_HOME: "/usr/lib/jvm/java-8-openjdk-amd64"
+        MAVEN_OPTS: "-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g"
