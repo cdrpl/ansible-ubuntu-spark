@@ -6,17 +6,18 @@ WORKDIR /root
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get upgrade -y \
-    && apt-get install -y software-properties-common openssh-client \
-    && add-apt-repository --yes --update ppa:ansible/ansible \
-    && apt-get install -y ansible
+    && apt-get install -y openssh-client python3 python3-pip
 
-COPY ./csv/* /root
-COPY ./dependencies/* /root
-COPY ./sql/* /root
-COPY ./playbooks/* /root
+# Install Ansible
+ENV PATH="${PATH}:/home/ubuntu/.local/bin"
+RUN python3 -m pip install --upgrade --user ansible
+
+# Copy required files from project directory
+COPY ./playbooks/* .
+COPY ./ssh_keys/id_rsa .ssh/id_rsa
 COPY ./ansible.cfg /etc/ansible/ansible.cfg
 COPY ./hosts /etc/ansible/hosts
-COPY ./ssh_keys/id_rsa /root/.ssh/id_rsa
 
-RUN chmod 700 /root/.ssh
-RUN chmod 600 /root/.ssh/id_rsa
+# Set the proper permissions for id_rsa
+RUN chmod 700 .ssh
+RUN chmod 600 .ssh/id_rsa
