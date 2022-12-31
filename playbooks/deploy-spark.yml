@@ -40,6 +40,7 @@
         path: /opt/spark
         owner: ubuntu
         group: ubuntu
+        recurse: yes
 
     - name: Creating Apache Spark slaves file
       file:

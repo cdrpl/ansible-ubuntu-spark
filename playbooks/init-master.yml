@@ -79,11 +79,12 @@
         path: /opt/spark
         owner: ubuntu
         group: ubuntu
+        recurse: yes
 
     - name: Adding spark to path in /home/ubuntu/.profile
       lineinfile:
         path: /home/ubuntu/.profile
-        line: export PATH=/opt/spark/bin:$PATH
+        line: export PATH=/opt/spark/bin:/opt/spark/sbin:$PATH
 
     - name: Creating Apache Spark slaves file
       file:
