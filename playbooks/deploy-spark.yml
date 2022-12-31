@@ -23,6 +23,9 @@
     - name: Deleting currently running Docker container
       shell: docker rm -f custom-spark
 
+    - name: Deleting previous Docker image
+      shell: docker image rm {{ docker_image }}
+
     - name: Running the Docker image "{{ docker_image }}"
       shell: docker run -d --name custom-spark {{ docker_image }}
 
