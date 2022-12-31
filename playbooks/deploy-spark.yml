@@ -7,7 +7,7 @@
     - name: docker_image
       prompt: "Enter the name of the Apache Spark Docker image"
       private: no
-      default: cdrpl/custom
+      default: justinshyi/spark-custom
 
     - name: node_ips
       prompt: "Enter the private IP addresses of the worker nodes, separated by spaces"
