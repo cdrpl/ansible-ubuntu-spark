@@ -24,7 +24,7 @@
       shell: docker rm -f custom-spark
 
     - name: Deleting previous Docker image
-      shell: docker image rm {{ docker_image }}
+      shell: docker image rm -f {{ docker_image }}
 
     - name: Running the Docker image "{{ docker_image }}"
       shell: docker run -d --name custom-spark {{ docker_image }}
@@ -57,6 +57,3 @@
 
     - name: Creating symbolic link for MySQL Connector J
       shell: ln -sf /usr/share/java/mysql-connector* /opt/spark/jars
-
-    - name: Rebooting the master instance
-      reboot:
