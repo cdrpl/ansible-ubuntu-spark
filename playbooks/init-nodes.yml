@@ -4,10 +4,10 @@
   become: yes
 
   vars_prompt:
-    - name: spark_version
-      prompt: Enter the desired Apache Spark version
-      default: "3.3.1"
+    - name: docker_image
+      prompt: "Enter the name of the Apache Spark Docker image"
       private: no
+      default: justinshyi/spark-custom
 
   tasks:
     - name: Running apt update
@@ -22,6 +22,17 @@
           - openjdk-8-jdk
           - scala
         state: latest
+
+    - name: Downloading Docker install script
+      shell: curl -fsSL https://get.docker.com -o get-docker.sh
+
+    - name: Installing Docker
+      shell: DRY_RUN=1 sudo sh ./get-docker.sh
+
+    - name: Deleting Docker install script
+      file:
+        path: /home/ubuntu/get-docker.sh
+        state: absent
 
     - name: Copying mysql-connector-j
       copy:
@@ -39,35 +50,28 @@
         path: /home/ubuntu/mysql-connector-j_8.0.31-1ubuntu22.04_all.deb
         state: absent
 
-    - name: Downloading compressed Apache Spark file
-      get_url:
-        url: https://dlcdn.apache.org/spark/spark-{{ spark_version }}/spark-{{ spark_version }}-bin-hadoop3.tgz
-        dest: /home/ubuntu/spark-{{ spark_version }}-bin-hadoop3.tgz
+    - name: Running the Docker image "{{ docker_image }}"
+      shell: docker run -d --name custom-spark {{ docker_image }}
 
-    - name: Extracting compressed Apache Spark file
-      shell: tar xvf /home/ubuntu/spark-{{ spark_version }}-bin-hadoop3.tgz
+    - name: Copying spark from running Docker container
+      shell: docker cp custom-spark:/opt/spark /opt/spark
 
-    - name: Deleting compressed Apache Spark file
+    - name: Deleting running Docker container
+      shell: docker rm -f custom-spark
+
+    - name: Changing ownership of /opt/spark
       file:
-        path: /home/ubuntu/spark-{{ spark_version }}-bin-hadoop3.tgz
-        state: absent
-
-    - name: Moving Apache Spark to /usr/local/spark
-      shell: mv /home/ubuntu/spark-{{ spark_version }}-bin-hadoop3 /usr/local/spark
-
-    - name: Changing ownership of /usr/local/spark
-      file:
-        path: /usr/local/spark
+        path: /opt/spark
         owner: ubuntu
         group: ubuntu
 
     - name: Adding spark to path in /home/ubuntu/.profile
       lineinfile:
         path: /home/ubuntu/.profile
-        line: export PATH=/usr/local/spark/bin:$PATH
+        line: export PATH=/opt/spark/bin:$PATH
 
     - name: Creating symbolic link for MySQL Connector J
-      shell: ln -sf /usr/share/java/mysql-connector* /usr/local/spark/jars
+      shell: ln -sf /usr/share/java/mysql-connector* /opt/spark/jars
 
     - name: Rebooting the nodes
       reboot:

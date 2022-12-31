@@ -5,6 +5,3 @@ master_1 ansible_host=127.0.0.1
 worker_1 ansible_host=127.0.0.1
 worker_2 ansible_host=127.0.0.1
 worker_3 ansible_host=127.0.0.1
-
-[database]
-database_1 ansible_host=127.0.0.1

@@ -9,10 +9,11 @@ RUN apt-get update \
     && apt-get install -y openssh-client python3 python3-pip
 
 # Install Ansible
-ENV PATH="${PATH}:/home/ubuntu/.local/bin"
+ENV PATH="${PATH}:/root/.local/bin"
 RUN python3 -m pip install --upgrade --user ansible
 
 # Copy required files from project directory
+COPY ./dependencies/* .
 COPY ./playbooks/* .
 COPY ./ssh_keys/id_rsa .ssh/id_rsa
 COPY ./ansible.cfg /etc/ansible/ansible.cfg

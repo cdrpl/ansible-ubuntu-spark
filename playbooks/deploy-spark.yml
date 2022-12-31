@@ -1,0 +1,59 @@
+- name: Deploying Apache Spark
+  hosts: all
+  user: ubuntu
+  become: yes
+
+  vars_prompt:
+    - name: docker_image
+      prompt: "Enter the name of the Apache Spark Docker image"
+      private: no
+      default: cdrpl/custom
+
+    - name: node_ips
+      prompt: "Enter the private IP addresses of the worker nodes, separated by spaces"
+      private: no
+
+  tasks:
+    - set_fact:
+        node_ips: "{{ node_ips.split(' ') }}"
+
+    - name: Deleting current Apache Spark installation
+      shell: rm -rf /opt/spark
+
+    - name: Deleting currently running Docker container
+      shell: docker rm -f custom-spark
+
+    - name: Running the Docker image "{{ docker_image }}"
+      shell: docker run -d --name custom-spark {{ docker_image }}
+
+    - name: Copying spark from running Docker container
+      shell: docker cp custom-spark:/opt/spark /opt/spark
+
+    - name: Deleting running Docker container
+      shell: docker rm -f custom-spark
+
+    - name: Changing ownership of /opt/spark
+      file:
+        path: /opt/spark
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Creating Apache Spark slaves file
+      file:
+        path: /opt/spark/conf/slaves
+        state: touch
+        owner: ubuntu
+        group: ubuntu
+        mode: u=rw,g=r,o=r
+
+    - name: Adding worker IPs to Apache Spark slaves file
+      lineinfile:
+        path: /opt/spark/conf/slaves
+        line: "{{ item }}"
+      loop: "{{ node_ips }}"
+
+    - name: Creating symbolic link for MySQL Connector J
+      shell: ln -sf /usr/share/java/mysql-connector* /opt/spark/jars
+
+    - name: Rebooting the master instance
+      reboot:
