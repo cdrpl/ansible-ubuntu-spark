@@ -18,12 +18,12 @@ This repository provides ansible scripts to initialize ubuntu instances for Apac
 ### How to Initialize the Master Instance (Windows OS Host)
 
 1. Start Docker
-2. Run `.bat/init-master.bat`
+2. Run `./bat/init-master.bat`
 
 ### How to Initialize the Worker Instances (Windows OS Host)
 
 1. Start Docker
-2. Run `.bat/init-nodes.bat`
+2. Run `./bat/init-nodes.bat`
 
 ### How to deploy Apache Spark to already initialized instances (Windows OS Host)
 
@@ -33,7 +33,7 @@ This repository provides ansible scripts to initialize ubuntu instances for Apac
 ### How to Update the Dependencies of your Instances (Windows OS Host)
 
 1. Start Docker
-2. Run `.bat/apt-update.bat`
+2. Run `./bat/apt-update.bat`
 
 ### Ansible Config
 
